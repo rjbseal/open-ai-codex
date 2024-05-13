@@ -12,7 +12,7 @@ app.listen(3000, () => console.log(`Listening on port 3000`))
 
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI();
 
 app.post('/', async (req, res) => {
   try {
@@ -25,6 +25,6 @@ app.post('/', async (req, res) => {
 
     res.send(response.choices[0].message.content)
   } catch (error) {
-
+    console.log(error);
   }
 })
