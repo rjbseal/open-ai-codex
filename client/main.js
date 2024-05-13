@@ -55,10 +55,10 @@ function chatStripe(isAi, value, uniqueId) {
 const handleSubmit = async (e) => {
   e.preventDefault()
 
-  const data = new FormData(form)
+  const userquery = new FormData(form)
 
   // user's chatstripe
-  chatContainer.innerHTML += chatStripe(false, data.get('prompt'))
+  chatContainer.innerHTML += chatStripe(false, userquery.get('prompt'))
 
   // to clear the textarea input 
   form.reset()
@@ -75,7 +75,25 @@ const handleSubmit = async (e) => {
 
   loader(messageDiv)
 
-  // clearInterval(loadInterval)
+  const response = await fetch('http://localhost:3000', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      prompt: userquery.get('prompt')
+    })
+  })
+
+  if (response.ok) {
+    const data = await response.text();
+
+    typeText(messageDiv, data)
+    console.log(data);
+  }
+
+  clearInterval(loadInterval)
+  messageDiv.innerHTML = ""
 }
 
 form.addEventListener('submit', handleSubmit)
