@@ -75,10 +75,7 @@ const handleSubmit = async (e) => {
 
   loader(messageDiv)
 
-  clearInterval(loadInterval)
-  messageDiv.innerHTML = " "
-
-
+  // clearInterval(loadInterval)
 }
 
 form.addEventListener('submit', handleSubmit)
