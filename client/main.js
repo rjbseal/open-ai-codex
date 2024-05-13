@@ -1,5 +1,6 @@
 import bot from './assets/bot.svg'
 import user from './assets/user.svg'
+import { v4 as uuidv4 } from 'uuid';
 
 const form = document.querySelector('form')
 const chatContainer = document.querySelector('#chat_container')
@@ -32,3 +33,57 @@ function typeText(element, text) {
     }
   }, 20)
 }
+
+function chatStripe(isAi, value, uniqueId) {
+  return (
+    `
+      <div class="wrapper ${isAi && 'ai'}">
+          <div class="chat">
+              <div class="profile">
+                  <img 
+                    src=${isAi ? bot : user} 
+                    alt="${isAi ? 'bot' : 'user'}" 
+                  />
+              </div>
+              <div class="message" id=${uniqueId}>${value}</div>
+          </div>
+      </div>
+  `
+  )
+}
+
+const handleSubmit = async (e) => {
+  e.preventDefault()
+
+  const data = new FormData(form)
+
+  // user's chatstripe
+  chatContainer.innerHTML += chatStripe(false, data.get('prompt'))
+
+  // to clear the textarea input 
+  form.reset()
+
+  // bot's chatstripe
+  const uniqueId = uuidv4()
+  chatContainer.innerHTML += chatStripe(true, " ", uniqueId)
+
+  // to focus scroll to the bottom 
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  // specific message div 
+  const messageDiv = document.getElementById(uniqueId)
+
+  loader(messageDiv)
+
+  clearInterval(loadInterval)
+  messageDiv.innerHTML = " "
+
+
+}
+
+form.addEventListener('submit', handleSubmit)
+form.addEventListener('keyup', (e) => {
+  if (e.key === "Enter") {
+    handleSubmit(e)
+  }
+})
