@@ -89,7 +89,6 @@ const handleSubmit = async (e) => {
     const data = await response.text();
 
     typeText(messageDiv, data)
-    console.log(data);
   }
 
   clearInterval(loadInterval)
